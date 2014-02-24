@@ -6,4 +6,3 @@ var agenda = new Agenda()
   .processEvery('1 minute');
 
 
-agenda.
