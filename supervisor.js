@@ -13,7 +13,7 @@ var nextPageSelector = process.env.NEXT_PAGE;
 // Agenda Config
 var agenda = new Agenda()
   .database(process.env.DATABASE_URL, process.env.DATABASE_COLLECTION)
-  .processEvery('5 seconds');
+  .processEvery('30 seconds');
 
 
 var workers = {};
@@ -30,24 +30,27 @@ var site = {
 var server = dnode({
   initWorker: function(worker, callback) {
     
-    console.log('Init worker' + worker.id);
+    console.log('Init worker: ' + worker.id);
 
     // Add a worker 
     workers[worker.id] = true;
 
     agenda.start();
-    callback('SERVER listening');
+    callback({response: 'SERVER listening'});
   },
   getJobs: function(worker, callback) {
-
-    agenda.define('find jobs', getJobs);
-
-    function getJobs(job) {
+    agenda.define('find jobs', function getJobs(job) {
       callback(site);
-    }
-
-    agenda.every('5 seconds', 'find jobs');
+    });
+    agenda.every('24 hours', 'find jobs');
+    
+  },
+  saveJobs: function(worker, callback) {
+    console.log(worker.jobsCollected);
+    callback({response: jobs.length + ' jobs saved'});
   }
-})
+});
+
+
 
 server.listen(process.env.PORT);
