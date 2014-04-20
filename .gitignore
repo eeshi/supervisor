@@ -28,8 +28,5 @@ node_modules
 # proportion of contributors will probably not be using SublimeText
 # *.sublime-project
 
-## Foreman local environment variables
-.env
-
 ## Test files
 test
