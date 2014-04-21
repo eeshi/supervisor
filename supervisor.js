@@ -61,7 +61,10 @@ function Worker(conn) {
   Worker.prototype.setRemote = function(remote) {
 
     utils.mergeAttr(this, remote);
-    
+    remote.greet('Supervisor says hello!', function(res) {
+      console.log(res);
+    });
+
   };
 
 }
