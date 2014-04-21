@@ -39,6 +39,9 @@ function WorkerCollection() {
     this.active.forEach(function(worker) {
 
       worker.conn.on('remote', worker.setRemote);
+      worker.conn.on('fail', worker.terminate);
+      worker.conn.on('end', worker.terminate);
+      worker.conn.on('error', worker.onError);
 
     });
 
@@ -61,9 +64,22 @@ function Worker(conn) {
   Worker.prototype.setRemote = function(remote) {
 
     utils.mergeAttr(this, remote);
+
     remote.greet('Supervisor says hello!', function(res) {
       console.log(res);
     });
+
+  };
+
+  Worker.prototype.terminate = function() {
+
+    console.log('Connection ended');
+
+  };
+
+  Worker.prototype.onError = function(err) {
+
+    console.log(err);
 
   };
 
