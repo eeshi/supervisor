@@ -25,18 +25,24 @@ WORKER_URLS.map(function(url) {
 
 });
 
-workers.forEach(function(w) {
+workers.init();
 
-  w.on('remote', function(remote) {
-    attachRPC(w, remote);
-  });
-
-});
+// agenda.start();
 
 function WorkerCollection() {
 
   this.active = [];
   this.unactive = [];
+
+  WorkerCollection.prototype.init = function() {
+
+    this.active.forEach(function(worker) {
+
+      worker.conn.on('remote', worker.setRemote);
+
+    });
+
+  };
 
   WorkerCollection.prototype.addWorker = function(worker) {
 
@@ -44,38 +50,18 @@ function WorkerCollection() {
 
   };
 
+  WorkerCollection.prototype.removeWorker = function(worker) {};
+
 }
 
 function Worker(conn) {
 
-
+  this.conn = conn;
 
   Worker.prototype.setRemote = function(remote) {
 
-    for(var key in remote) { 
-      if(remote.hasOwnProperty(key)) {
-        this[key] = remote[key];
-      }
-    }
-
+    utils.mergeAttr(this, remote);
+    
   };
 
 }
-function attachRPC(w, remote) {
-
-  for(var key in remote) {
-
-    if(remote.hasOwnProperty(key)) {
-      w[key] = remote[key];
-    }
-
-  }
-
-}
-
-// agenda.start();
-
-
-
-
-
