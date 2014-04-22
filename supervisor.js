@@ -2,6 +2,9 @@ var Agenda = require('agenda');
 var dnode = require('dnode');
 var utils = require('./utils');
 
+var WorkerCollection = require('./lib/WorkerCollection');
+var Worker = require('./lib/Worker');
+
 var DATABASE_URL = process.env['DATABASE_URL'];
 var WORKER_URLS = process.env['WORKERS'].split(',');
 
@@ -29,58 +32,6 @@ workers.init();
 
 // agenda.start();
 
-function WorkerCollection() {
 
-  this.active = [];
-  this.unactive = [];
 
-  WorkerCollection.prototype.init = function() {
 
-    this.active.forEach(function(worker) {
-
-      worker.conn.on('remote', worker.setRemote);
-      worker.conn.on('fail', worker.terminate);
-      worker.conn.on('end', worker.terminate);
-      worker.conn.on('error', worker.onError);
-
-    });
-
-  };
-
-  WorkerCollection.prototype.addWorker = function(worker) {
-
-    this.active.push(worker);
-
-  };
-
-  WorkerCollection.prototype.removeWorker = function(worker) {};
-
-}
-
-function Worker(conn) {
-
-  this.conn = conn;
-
-  Worker.prototype.setRemote = function(remote) {
-
-    utils.mergeAttr(this, remote);
-
-    remote.greet('Supervisor says hello!', function(res) {
-      console.log(res);
-    });
-
-  };
-
-  Worker.prototype.terminate = function() {
-
-    console.log('Connection ended');
-
-  };
-
-  Worker.prototype.onError = function(err) {
-
-    console.log(err);
-
-  };
-
-}
