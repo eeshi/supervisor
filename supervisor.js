@@ -20,6 +20,7 @@ WORKER_URLS.forEach(function(url) {
 
 });
 
+workers.init();
 // agenda.start();
 
 
