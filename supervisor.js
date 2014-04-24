@@ -11,7 +11,7 @@ var WORKER_URLS = process.env['WORKERS'].split(',');
 //   .database(DATABASE_URL, '/scheduler')
 //   .processEvery('30 seconds');
 
-var workers = new WorkerCollection();
+var workers = new WorkerCollection({ refresh: 5000 });
 
 WORKER_URLS.forEach(function(url) {
 
@@ -19,10 +19,4 @@ WORKER_URLS.forEach(function(url) {
   workers.addWorker(worker);
 
 });
-
-workers.init();
 // agenda.start();
-
-
-
-
