@@ -11,12 +11,13 @@ var WORKER_URLS = process.env['WORKERS'].split(',');
 //   .database(DATABASE_URL, '/scheduler')
 //   .processEvery('30 seconds');
 
-var workers = new WorkerCollection({ refresh: 5000 });
+var workerCollection = new WorkerCollection({ refresh: 5000 });
 
 WORKER_URLS.forEach(function(url) {
 
   var worker = new Worker(url);
-  workers.addWorker(worker);
+  workerCollection.addWorker(worker);
 
 });
+
 // agenda.start();
