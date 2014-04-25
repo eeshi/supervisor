@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "agenda": "^0.5.6",
-    "dnode": "^1.2.0"
+    "dnode": "^1.2.0",
+    "request": "~2.34.0"
   }
 }
