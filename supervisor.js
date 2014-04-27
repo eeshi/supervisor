@@ -1,5 +1,4 @@
 var Agenda = require('agenda');
-var utils = require('./utils');
 
 var api = require('./lib/api');
 var WorkerCollection = require('./lib/WorkerCollection');
