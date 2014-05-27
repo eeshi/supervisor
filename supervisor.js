@@ -20,7 +20,7 @@ function initWorkers(urls) {
   var workers = urls.map(function(url) {
    
     var segments = url.split(':');
-    var port = parseInt(segments.splice(segments.length - 1)[0]);
+    var port = parseInt(segments.splice(segments.length - 1)[0], 10);
     var hostname = segments.join(':');
 
     var req = axon.socket('req');
