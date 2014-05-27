@@ -3,7 +3,6 @@ var rpc = require('axon-rpc');
 var axon = require('axon');
 
 var req = axon.socket('req');
-
 var api = require('./lib/api');
 
 var DATABASE_URL = process.env['DATABASE_URL'];
@@ -24,5 +23,5 @@ supervisor.call('wub', 'sent from the supervisor', function(err, message) {
 
 });
 
-req.connect(4000);
+req.connect('localhost:4000');
 // agenda.start();
