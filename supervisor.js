@@ -7,13 +7,23 @@ var api = require('./lib/api');
 var DATABASE_URL = process.env['DATABASE_URL'];
 var WORKER_URLS = process.env['WORKERS'].split(',');
 
-// var agenda = new Agenda()
-//   .database(DATABASE_URL, '/scheduler')
-//   .processEvery('30 seconds');
+var agenda = new Agenda()
+  .database(DATABASE_URL, '/scheduler')
+  .processEvery('5 minutes');
 
 var workers = initWorkers(WORKER_URLS);
 
-// agenda.start();
+agenda.define('scrape links', function(job, done) {
+
+});
+
+agenda.define('scrape post', function(job, done) {
+
+});
+
+agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am 
+
+agenda.start();
 
 function initWorkers(urls) {
   
