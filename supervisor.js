@@ -17,7 +17,7 @@ agenda.define('scrape links', function(job, done) {
 
   checkAndCall(workers, function(worker) {
 
-    worker.call('scrape links', { model: 'goes here' }, function(err, links) {
+    worker.call('scrape', { model: 'goes here' }, function(err, links) {
 
       if(err) {
         throw err;
@@ -36,7 +36,7 @@ agenda.define('scrape post', function(job, done) {
 
   checkAndCall(workers, function(worker) {
 
-    worker.call('scrape post', { model: 'goes here' }, function(err, post) {
+    worker.call('scrape', { model: 'goes here' }, function(err, post) {
 
       if(err) {
         throw err;
