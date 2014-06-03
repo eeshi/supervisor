@@ -81,7 +81,7 @@ function checkAndCall(workers, callback, i) {
 
   var i = i || 0; 
 
-  workers[i].call('check status', null, function(err, status){
+  workers[i].call('check status', function(err, status){
 
     if(err) {
       throw err;
