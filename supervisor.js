@@ -3,6 +3,7 @@ var rpc = require('axon-rpc');
 var axon = require('axon');
 
 var api = require('./lib/api');
+var sources = require('./sources.json');
 
 var DATABASE_URL = process.env['DATABASE_URL'];
 var WORKER_URLS = process.env['WORKERS'].split(',');
@@ -15,16 +16,16 @@ var workers = initWorkers(WORKER_URLS);
 
 agenda.define('scrape links', function(job, done) {
 
+
   checkAndCall(workers, function(worker) {
 
-    worker.call('scrape', { model: 'goes here' }, function(err, links) {
+    worker.call('scrape', 'url', {}, {}, function(err, links) {
 
       if(err) {
         throw err;
       }
 
       api.saveLinks(links);
-
 
     });
 
@@ -36,7 +37,7 @@ agenda.define('scrape post', function(job, done) {
 
   checkAndCall(workers, function(worker) {
 
-    worker.call('scrape', { model: 'goes here' }, function(err, post) {
+    worker.call('scrape', 'url', {}, {}, function(err, post) {
 
       if(err) {
         throw err;

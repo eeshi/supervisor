@@ -30,3 +30,6 @@ node_modules
 
 ## Test files
 test
+
+## Source JSON for crawling
+sources.json
