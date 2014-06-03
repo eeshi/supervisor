@@ -15,6 +15,20 @@ var workers = initWorkers(WORKER_URLS);
 
 agenda.define('scrape links', function(job, done) {
 
+  checkAndCall(workers, function(worker) {
+
+    worker.call('scrape links', { model: 'goes here' }, function(err, links) {
+
+      if(err) {
+        throw err;
+      }
+
+      api.saveLinks(links);
+
+
+    });
+
+  });
 
 });
 
@@ -24,7 +38,7 @@ agenda.define('scrape post', function(job, done) {
 
 agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am 
 
-// agenda.start();
+agenda.start();
 
 checkAndCall(workers, function(worker) {
 
@@ -61,7 +75,11 @@ function checkAndCall(workers, callback, i) {
 
   var i = i || 0; 
 
-  workers[i].call('check status', 'Hello', function(err, status){
+  workers[i].call('check status', null, function(err, status){
+
+    if(err) {
+      throw err;
+    }
 
     if(status) { // true for avaiable, false for busy
      return callback(workers[i]);
