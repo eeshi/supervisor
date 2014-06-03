@@ -24,6 +24,10 @@ agenda.define('scrape links', function(job, done) {
 
 agenda.define('scrape post', function(job, done) {
 
+  models.forEach(function(item, i, arr) {
+    crawlLinks(item, i, arr)
+  });
+
 });
 
 agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am 
@@ -117,4 +121,8 @@ function crawlLinks(item, i, arr, job, done) {
 
   });
 
+}
+
+function crawlPost(item, i, arr, job, done) {
+  
 }
