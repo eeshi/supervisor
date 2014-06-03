@@ -51,7 +51,7 @@ function initWorkers(urls) {
 
 }
 
-function checkAndCall(callback, i) {
+function checkWorkerQueue(callback, i) {
 
   var i = i || 0; 
 
@@ -65,7 +65,7 @@ function checkAndCall(callback, i) {
      return callback(workers[i]);
     }
     
-    return workers[++i] && checkAndCall(workers, callback, i);
+    return workers[++i] && checkWorkerQueue(workers, callback, i);
 
   });
 
@@ -77,7 +77,7 @@ function crawlLinks(item, i, arr) {
   var model = item.linksList.model;
   var options = item.linksList.options;
 
-  checkAndCall(function(worker) {
+  checkWorkerQueue(function(worker) {
 
     worker.call('scrape', url, model, options, function(err, data) {
 
