@@ -17,7 +17,7 @@ var workers = initWorkers(WORKER_URLS);
 agenda.define('scrape links', function(job, done) {
 
   models.forEach(function(item, i, arr) {
-    crawlLinks(item, i, arr)
+    crawlLinks(item, i, arr, job, done);
   });
 
 });
@@ -51,7 +51,7 @@ function initWorkers(urls) {
 
 }
 
-function checkWorkerQueue(callback, i) {
+function getQueuedWorker(callback, i) {
 
   var i = i || 0; 
 
@@ -65,19 +65,19 @@ function checkWorkerQueue(callback, i) {
      return callback(workers[i]);
     }
     
-    return workers[++i] && checkWorkerQueue(workers, callback, i);
+    return workers[++i] && getQueuedWorker(callback, i);
 
   });
 
 }
 
-function crawlLinks(item, i, arr) {
+function crawlLinks(item, i, arr, job, done) {
 
   var url = item.prot + item.baseUrl + item.linksList.startUrl;
   var model = item.linksList.model;
   var options = item.linksList.options;
 
-  checkWorkerQueue(function(worker) {
+  getQueuedWorker(function(worker) {
 
     worker.call('scrape', url, model, options, function(err, data) {
 
@@ -85,18 +85,22 @@ function crawlLinks(item, i, arr) {
         throw err;
       }
 
-      api.saveLinks(data, function(err, res) {
+      job.touch(function() {
+       
+        api.saveLinks(data, function(err, res) {
 
-        if(err) {
-          return console.log(err);
-        }
+          if(err) {
+            return console.log(err);
+          }
 
-        if (data.nextPageLink) {
-          item.linksList.startUrl = data.nextPageLink;
-          return crawlLinks(item, i, arr);
-        } else {
-          return;
-        }
+          if (data.nextPageLink) {
+            item.linksList.startUrl = data.nextPageLink;
+            return crawlLinks(item, i, arr, job, done);
+          } else {
+            return done();
+          }
+
+        });
 
       });
 
