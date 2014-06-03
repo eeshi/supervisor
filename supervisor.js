@@ -86,8 +86,17 @@ function crawlLinks(item, i, arr, job, done) {
       }
 
       job.touch(function() {
-       
-        api.saveLinks(data, function(err, res) {
+        
+        var linksCollected = data.jobLinks.map(function(link) {
+          
+          return {
+            _id: item.prot + item.baseUrl + link,
+            sourceId: item.sourceId
+          }
+
+        });
+
+        api.saveLinks(linksCollected, function(err, res) {
 
           if(err) {
             return console.log(err);
