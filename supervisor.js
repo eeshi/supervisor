@@ -3,7 +3,7 @@ var rpc = require('axon-rpc');
 var axon = require('axon');
 
 var api = require('./lib/api');
-var sources = require('./sources.json');
+var models = require('./sources.json');
 
 var DATABASE_URL = process.env['DATABASE_URL'];
 var WORKER_URLS = process.env['WORKERS'].split(',');
@@ -16,40 +16,13 @@ var workers = initWorkers(WORKER_URLS);
 
 agenda.define('scrape links', function(job, done) {
 
-
-  checkAndCall(workers, function(worker) {
-
-    worker.call('scrape', 'url', {}, {}, function(err, links) {
-
-      if(err) {
-        throw err;
-      }
-
-      api.saveLinks(links);
-
-    });
-
+  models.forEach(function(item, i, arr) {
+    crawlLinks(item, i, arr)
   });
 
 });
 
 agenda.define('scrape post', function(job, done) {
-
-  checkAndCall(workers, function(worker) {
-
-    worker.call('scrape', 'url', {}, {}, function(err, post) {
-
-      if(err) {
-        throw err;
-      }
-
-      api.saveJobPost(post);
-
-
-    });
-
-  });
-
 
 });
 
@@ -78,7 +51,7 @@ function initWorkers(urls) {
 
 }
 
-function checkAndCall(workers, callback, i) {
+function checkAndCall(callback, i) {
 
   var i = i || 0; 
 
@@ -98,3 +71,37 @@ function checkAndCall(workers, callback, i) {
 
 }
 
+function crawlLinks(item, i, arr) {
+
+  var url = item.prot + item.baseUrl + item.linksList.startUrl;
+  var model = item.linksList.model;
+  var options = item.linksList.options;
+
+  checkAndCall(function(worker) {
+
+    worker.call('scrape', url, model, options, function(err, data) {
+
+      if(err) {
+        throw err;
+      }
+
+      api.saveLinks(data, function(err, res) {
+
+        if(err) {
+          return console.log(err);
+        }
+
+        if (data.nextPageLink) {
+          item.linksList.startUrl = data.nextPageLink;
+          return crawlLinks(item, i, arr);
+        } else {
+          return;
+        }
+
+      });
+
+    });
+
+  });
+
+}
