@@ -56,16 +56,6 @@ agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am
 
 agenda.start();
 
-checkAndCall(workers, function(worker) {
-
-  worker.call('scrape links', 'wub wub', function(err, links) {
-
-    console.log(links)
-    
-  });
-
-});
-
 function initWorkers(urls) {
   
   var workers = urls.map(function(url) {
