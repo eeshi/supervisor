@@ -34,6 +34,22 @@ agenda.define('scrape links', function(job, done) {
 
 agenda.define('scrape post', function(job, done) {
 
+  checkAndCall(workers, function(worker) {
+
+    worker.call('scrape post', { model: 'goes here' }, function(err, post) {
+
+      if(err) {
+        throw err;
+      }
+
+      api.saveJobPost(post);
+
+
+    });
+
+  });
+
+
 });
 
 agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am 
