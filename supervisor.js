@@ -4,15 +4,13 @@ var axon = require('axon');
 
 var api = require('./lib/api');
 var models = require('./sources.json');
-
-var DATABASE_URL = process.env['DATABASE_URL'];
-var WORKER_URLS = process.env['WORKERS'].split(',');
+var config = require('./config');
 
 var agenda = new Agenda()
-  .database(DATABASE_URL, '/scheduler')
+  .database(config.DATABASE_URL, '/scheduler')
   .processEvery('5 minutes');
 
-var workers = initWorkers(WORKER_URLS);
+var workers = initWorkers(config.WORKER_URLS);
 
 agenda.define('scrape links', function(job, done) {
 
@@ -124,5 +122,7 @@ function crawlLinks(item, i, arr, job, done) {
 }
 
 function crawlPost(item, i, arr, job, done) {
-  
+
+
+
 }
