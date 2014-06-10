@@ -28,14 +28,14 @@ agenda.define('scrape post', function(job, done) {
 
 });
 
-agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am 
+agenda.every('30 2 * * *', 'scrape links'); // Repeat everyday at 2:30 am
 
 agenda.start();
 
 function initWorkers(urls) {
-  
+
   var workers = urls.map(function(url) {
-   
+
     var segments = url.split(':');
     var port = parseInt(segments.splice(segments.length - 1)[0], 10);
     var hostname = segments.join(':');
@@ -55,7 +55,7 @@ function initWorkers(urls) {
 
 function getQueuedWorker(callback, i) {
 
-  var i = i || 0; 
+  var i = i || 0;
 
   workers[i].call('check status', function(err, status){
 
@@ -66,7 +66,7 @@ function getQueuedWorker(callback, i) {
     if(status) { // true for avaiable, false for busy
      return callback(workers[i]);
     }
-    
+
     return workers[++i] && getQueuedWorker(callback, i);
 
   });
@@ -88,9 +88,9 @@ function crawlLinks(item, i, arr, job, done) {
       }
 
       job.touch(function() {
-        
+
         var linksCollected = data.jobLinks.map(function(link) {
-          
+
           return {
             _id: item.prot + item.baseUrl + link,
             sourceId: item.sourceId
@@ -122,7 +122,5 @@ function crawlLinks(item, i, arr, job, done) {
 }
 
 function crawlPost(item, i, arr, job, done) {
-
-
 
 }
