@@ -6,7 +6,7 @@ switch(env['NODE_ENV']) {
   case 'production':
     config = {
       WORKER_URLS: env['WORKERS'].split(','),
-      DATABASE_URL: env['OPENSHIFT_MONGODB_DB_URL ']
+      DATABASE_URL: env['OPENSHIFT_MONGODB_DB_URL']
     };
   break;
 
