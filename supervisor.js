@@ -23,7 +23,7 @@ agenda.define('scrape links', function(job, done) {
 agenda.define('scrape post', function(job, done) {
 
   models.forEach(function(item, i, arr) {
-    crawlLinks(item, i, arr)
+    crawlPost(item, i, arr);
   });
 
 });
@@ -101,7 +101,7 @@ function crawlLinks(item, i, arr, job, done) {
         api.saveLinks(linksCollected, function(err, res) {
 
           if(err) {
-            return console.log(err);
+            throw err;
           }
 
           if (data.nextPageLink) {
@@ -122,5 +122,54 @@ function crawlLinks(item, i, arr, job, done) {
 }
 
 function crawlPost(item, i, arr, job, done) {
+
+  var model = item.jobPost.model;
+  var options = item.jobPost.options;
+
+  // api.getNextBatch(function(links) {
+  //
+  //   links.forEach(function(jobLink){
+  //
+  //     var url = jobLink._id;
+  //
+  //     job.touch(function() {
+  //
+  //       getQueuedWorker(function(worker) {
+  //
+  //         worker.call('scrape', url, model, options, function(err, data) {
+  //
+  //           if(err) {
+  //             throw err;
+  //           }
+  //
+  //           data.url = jobLink._id;
+  //           data.sourceId = model.sourceId;
+  //
+  //           if (data.appendDesc) {
+  //             data.desc = data.desc + ' ' + data.appendDesc;
+  //             delete data.appendDesc;
+  //           }
+  //
+  //           job.touch(function() {
+  //
+  //             api.saveJobAndConsume(data, function(err, res) {
+  //
+  //               if(err) {
+  //                 throw err;
+  //               }
+  //
+  //             });
+  //
+  //           });
+  //
+  //         });
+  //
+  //       });
+  //
+  //     });
+  //
+  //   });
+  //
+  // });
 
 }
