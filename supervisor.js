@@ -14,16 +14,16 @@ var workers = initWorkers(config.WORKER_URLS);
 
 agenda.define('scrape links', function(job, done) {
 
-  models.forEach(function(item, i, arr) {
-    crawlLinks(item, i, arr, job, done);
+  models.forEach(function(item) {
+    crawlLinks(item, job, done);
   });
 
 });
 
 agenda.define('scrape post', function(job, done) {
 
-  models.forEach(function(item, i, arr) {
-    crawlPost(item, i, arr);
+  models.forEach(function(item) {
+    crawlPost(item, job, done);
   });
 
 });
@@ -73,7 +73,7 @@ function getQueuedWorker(callback, i) {
 
 }
 
-function crawlLinks(item, i, arr, job, done) {
+function crawlLinks(item, job, done) {
 
   var url = item.prot + item.baseUrl + item.linksList.startUrl;
   var model = item.linksList.model;
@@ -106,7 +106,7 @@ function crawlLinks(item, i, arr, job, done) {
 
           if (data.nextPageLink) {
             item.linksList.startUrl = data.nextPageLink;
-            return crawlLinks(item, i, arr, job, done);
+            return crawlLinks(item, job, done);
           } else {
             return done();
           }
@@ -121,7 +121,7 @@ function crawlLinks(item, i, arr, job, done) {
 
 }
 
-function crawlPost(item, i, arr, job, done) {
+function crawlPost(item, job, done) {
 
   var model = item.jobPost.model;
   var options = item.jobPost.options;
