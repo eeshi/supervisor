@@ -7,7 +7,7 @@ root = true
 
 # Two spaces indentation style
 indent_style = space
-indent_size = 10
+indent_size = 2
 
 # Unix-style newlines with a newline ending and utf-8 encoding in every file
 end_of_line = lf
